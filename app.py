@@ -2,6 +2,7 @@
 
 import subprocess
 import os
+import modal
 from modal import (App, Image, web_server, Secret, Volume)
 
 cuda_version = "12.4.0"
@@ -32,11 +33,11 @@ app = App(
 @app.cls(
     gpu="A100",
     image=image,
-    concurrency_limit=1,
+    max_containers=1,
     timeout=7200,
-    allow_concurrent_inputs=100,
     volumes={"/root/fluxgym/outputs": volume}
 )
+@modal.concurrent(100)
 
 class FluxGymApp:
     def run_gradio(self):
@@ -53,6 +54,61 @@ class FluxGymApp:
     def ui(self):
         print("Starting FluxGym application...")
         self.run_gradio()
+
+    @modal.method()
+    def list_outputs(self):
+        os.chdir("/root/fluxgym/outputs")
+        print("📁 Listing files in /root/fluxgym/outputs:")
+        print(os.listdir("."))
+
+    @modal.method()
+    def inspect_output(self, output_name: str):
+        output_path = f"/root/fluxgym/outputs/{output_name}"
+        if os.path.exists(output_path):
+            print(f"📁 Contents of {output_name}:")
+            for root, dirs, files in os.walk(output_path):
+                level = root.replace(output_path, '').count(os.sep)
+                indent = ' ' * 2 * level
+                print(f"{indent}{os.path.basename(root)}/")
+                subindent = ' ' * 2 * (level + 1)
+                for file in files:
+                    file_path = os.path.join(root, file)
+                    file_size = os.path.getsize(file_path)
+                    print(f"{subindent}{file} ({file_size} bytes)")
+        else:
+            print(f"Output {output_name} not found")
+
+    @modal.method()
+    def download_safetensors(self, output_name: str, filename: str = None):
+        output_path = f"/root/fluxgym/outputs/{output_name}"
+        if os.path.exists(output_path):
+            # Find safetensors files
+            safetensor_files = []
+            for root, dirs, files in os.walk(output_path):
+                for file in files:
+                    if file.endswith('.safetensors'):
+                        safetensor_files.append(os.path.join(root, file))
+            
+            if not safetensor_files:
+                raise FileNotFoundError(f"No .safetensors files found in {output_name}")
+            
+            if filename:
+                # Download specific file
+                target_file = None
+                for f in safetensor_files:
+                    if filename in f:
+                        target_file = f
+                        break
+                if not target_file:
+                    raise FileNotFoundError(f"File {filename} not found")
+                with open(target_file, 'rb') as f:
+                    return f.read()
+            else:
+                # Download the first/main safetensors file
+                with open(safetensor_files[0], 'rb') as f:
+                    return f.read()
+        else:
+            raise FileNotFoundError(f"Output {output_name} not found")
 
 if __name__ == "__main__":
     app.serve()
