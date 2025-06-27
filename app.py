@@ -1,7 +1,9 @@
 # From https://github.com/Dragoy/fluxgym-modal
+# Built extra support functions
 
 import subprocess
 import os
+import modal
 from modal import (App, Image, web_server, Secret, Volume)
 
 cuda_version = "12.4.0"
@@ -53,6 +55,29 @@ class FluxGymApp:
     def ui(self):
         print("Starting FluxGym application...")
         self.run_gradio()
+
+    @modal.method()
+    def list_outputs(self):
+        os.chdir("/root/fluxgym/outputs")
+        print("📁 Listing files in /root/fluxgym/outputs:")
+        print(os.listdir("."))
+
+    @modal.method()
+    def inspect_output(self, output_name: str):
+        output_path = f"/root/fluxgym/outputs/{output_name}"
+        if os.path.exists(output_path):
+            print(f"📁 Contents of {output_name}:")
+            for root, dirs, files in os.walk(output_path):
+                level = root.replace(output_path, '').count(os.sep)
+                indent = ' ' * 2 * level
+                print(f"{indent}{os.path.basename(root)}/")
+                subindent = ' ' * 2 * (level + 1)
+                for file in files:
+                    file_path = os.path.join(root, file)
+                    file_size = os.path.getsize(file_path)
+                    print(f"{subindent}{file} ({file_size} bytes)")
+        else:
+            print(f"Output {output_name} not found")
 
 if __name__ == "__main__":
     app.serve()
