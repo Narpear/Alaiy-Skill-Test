@@ -1,69 +1,3 @@
-# import time
-# import requests
-# import os
-# from selenium import webdriver
-# from selenium.webdriver.common.by import By
-# from selenium.webdriver.chrome.options import Options
-
-# def scrape_abercrombie_images():
-#     # Chrome options
-#     options = Options()
-#     options.add_argument("--headless")
-#     options.add_argument("--no-sandbox")
-#     options.add_argument("--disable-dev-shm-usage")
-    
-#     # Start driver
-#     driver = webdriver.Chrome(options=options)
-    
-#     try:
-#         # Load page
-#         url = "https://www.abercrombie.com/shop/wd/womens-bottoms--1?rows=90&sort=metricorderedunits&start=0"
-#         driver.get(url)
-#         time.sleep(10)  # Let the page load
-        
-#         # Scroll to load more products
-#         for i in range(3):
-#             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-#             time.sleep(3)
-        
-#         # Find only images with the exact class for product view 1
-#         images = driver.find_elements(By.CSS_SELECTOR, "img.catalog-productCard-module__productCardImage_1")
-#         product_images = []
-
-#         for img in images:
-#             src = img.get_attribute("src")
-#             if src:
-#                 product_images.append(src)
-        
-#         # Create download folder
-#         os.makedirs("images", exist_ok=True)
-        
-#         # Download up to 40 images
-#         for i, img_url in enumerate(product_images[:40]):
-#             try:
-#                 response = requests.get(img_url, timeout=10)
-#                 if response.status_code == 200:
-#                     filename = f"women_bottoms_{i+1}.jpg"
-#                     filepath = os.path.join("images", filename)
-                    
-#                     with open(filepath, 'wb') as f:
-#                         f.write(response.content)
-                    
-#                     print(f"Downloaded: {filename}")
-#                     time.sleep(5)  # Delay to avoid hitting server too quickly
-                    
-#             except Exception as e:
-#                 print(f"Error downloading image {i+1}: {e}")
-#                 time.sleep(5)
-        
-#         print(f"Download complete! {len(product_images[:40])} images saved.")
-        
-#     finally:
-#         driver.quit()
-
-# if __name__ == "__main__":
-#     scrape_abercrombie_images()
-
 import time
 import requests
 import os
@@ -74,20 +8,20 @@ from selenium.webdriver.chrome.options import Options
 
 # Define scraping targets
 SCRAPE_TARGETS = [
-    {"url": "https://www.abercrombie.com/shop/wd/mens-tops--1", "gender": "mens", "category": "tops", "limit": 50},
-    {"url": "https://www.abercrombie.com/shop/wd/mens-bottoms--1", "gender": "mens", "category": "bottoms", "limit": 30},
-    {"url": "https://www.abercrombie.com/shop/wd/mens-coats-and-jackets", "gender": "mens", "category": "coats-and-jackets", "limit": 30},
-    {"url": "https://www.abercrombie.com/shop/wd/mens-suits", "gender": "mens", "category": "suits", "limit": 20},
-    {"url": "https://www.abercrombie.com/shop/wd/mens-activewear", "gender": "mens", "category": "activewear", "limit": 20},
-    {"url": "https://www.abercrombie.com/shop/wd/mens-underwear", "gender": "mens", "category": "underwear", "limit": 10},
-    {"url": "https://www.abercrombie.com/shop/wd/mens-swim", "gender": "mens", "category": "swim", "limit": 20},
     {"url": "https://www.abercrombie.com/shop/wd/womens-dresses-and-jumpsuits", "gender": "womens", "category": "dresses-and-jumpsuits", "limit": 20},
     {"url": "https://www.abercrombie.com/shop/wd/womens-tops--1", "gender": "womens", "category": "tops", "limit": 50},
     {"url": "https://www.abercrombie.com/shop/wd/womens-bottoms--1", "gender": "womens", "category": "bottoms", "limit": 40},
     {"url": "https://www.abercrombie.com/shop/wd/womens-coats-and-jackets", "gender": "womens", "category": "coats-and-jackets", "limit": 20},
     {"url": "https://www.abercrombie.com/shop/wd/womens-sleep-and-intimates", "gender": "womens", "category": "sleep-and-intimates", "limit": 20},
     {"url": "https://www.abercrombie.com/shop/wd/womens-shoes", "gender": "womens", "category": "shoes", "limit": 20},
-    {"url": "https://www.abercrombie.com/shop/wd/womens-activewear", "gender": "womens", "category": "activewear", "limit": 20}
+    {"url": "https://www.abercrombie.com/shop/wd/womens-activewear", "gender": "womens", "category": "activewear", "limit": 20},
+    {"url": "https://www.abercrombie.com/shop/wd/mens-tops--1", "gender": "mens", "category": "tops", "limit": 50},
+    {"url": "https://www.abercrombie.com/shop/wd/mens-bottoms--1", "gender": "mens", "category": "bottoms", "limit": 30},
+    {"url": "https://www.abercrombie.com/shop/wd/mens-coats-and-jackets", "gender": "mens", "category": "coats-and-jackets", "limit": 30},
+    {"url": "https://www.abercrombie.com/shop/wd/mens-suits", "gender": "mens", "category": "suits", "limit": 20},
+    {"url": "https://www.abercrombie.com/shop/wd/mens-activewear", "gender": "mens", "category": "activewear", "limit": 20},
+    {"url": "https://www.abercrombie.com/shop/wd/mens-underwear", "gender": "mens", "category": "underwear", "limit": 10},
+    {"url": "https://www.abercrombie.com/shop/wd/mens-swim", "gender": "mens", "category": "swim", "limit": 20}  
 ]
 
 
@@ -150,7 +84,7 @@ def scrape_abercrombie_images():
                         time.sleep(3)
 
                 except Exception as e:
-                    print(f"❌ Error downloading: {e}")
+                    print(f"Error downloading: {e}")
                     time.sleep(3)
 
     finally:
