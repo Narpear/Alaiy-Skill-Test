@@ -1,0 +1,15 @@
+Name					: ChubbiesStyleLoRA (chubbiesstylelora)
+Trigger word				: chubbies_style
+Base model 				: flux-dev
+VRAM					: 16 GB
+LoRA Rank				: 4
+Seed 					: 42
+Learning Rate				: 8e-4
+Guidance Scale 				: 1
+Images					: 95
+Repeat trains per image			: 3
+Max train epochs			: 9
+Save every n epochs			: 3
+Expected training steps			: 1971
+Generate image every n steps 		: 400
+Approximate training time 		: 50 minutes (Modal A100 40GB)

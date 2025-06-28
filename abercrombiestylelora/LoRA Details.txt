@@ -12,3 +12,4 @@ Max train epochs			: 10
 Save every n epochs			: 2
 Expected training steps			: 2850
 Generate image every n steps 		: 300
+Approximate training time 		: 1.5h (Modal A100 40GB) (90 minutes)
