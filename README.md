@@ -1,5 +1,7 @@
 # Alaiy-Skill-Test
 
+https://huggingface.co/black-forest-labs/FLUX.1-dev
 
-LoRA Training Details -> https://docs.google.com/document/d/1z1MBli8yX5czprHs_akj4uwm7qUqGneVYiSQpE2Dm5U/edit?usp=sharing
+https://huggingface.co/Narpear/abercrombiestylelora
 
+https://huggingface.co/Narpear/chubbiesstylelora

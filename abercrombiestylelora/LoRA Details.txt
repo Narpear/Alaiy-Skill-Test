@@ -4,8 +4,8 @@ Base model 				: flux-dev
 VRAM					: 16 GB
 LoRA Rank				: 4
 Seed 					: 42
+Guidance				: 1
 Learning Rate				: 8e-4
-Guidance Scale 				: 1
 Images					: 95
 Repeat trains per image			: 3
 Max train epochs			: 10
